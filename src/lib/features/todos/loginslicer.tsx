@@ -6,6 +6,7 @@ interface LoginState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   isAuthenticated: boolean;
+  token: string | null;
 }
 
 const initialState: LoginState = {
@@ -14,6 +15,7 @@ const initialState: LoginState = {
   status: 'idle',
   error: null,
   isAuthenticated: false,
+  token: null,
 };
  //query que vai para o login caso sue back n tenha o prefixo "user" antes do jsson com as autenficações tire o use do async abaixo
 export const login = createAsyncThunk('login', async (user: { user: { email: string; password: string; } }) => {
@@ -30,11 +32,15 @@ export const login = createAsyncThunk('login', async (user: { user: { email: str
     throw new Error('Failed to login');
   }
 
+  const token = response.headers.get('Authorization');
+  if (token) {
+    return { user: await response.json(), token };
+  }
+
   const data = await response.json();
-  return data;
+  return { user: data, token: null };
 });
 
-//cria o slice E SETA VALORES INICIAIS
 
 export const loginSlice = createSlice({
   name: 'login',
@@ -52,9 +58,10 @@ export const loginSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(login.fulfilled, (state) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.isAuthenticated = true;
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state) => {
         state.status = 'failed';
