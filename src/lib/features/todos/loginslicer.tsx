@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 interface LoginState {
-  email: string;
+  username: string;
   password: string;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
@@ -10,7 +10,7 @@ interface LoginState {
 }
 
 const initialState: LoginState = {
-  email: '',
+  username: '',
   password: '',
   status: 'idle',
   error: null,
@@ -18,8 +18,8 @@ const initialState: LoginState = {
   token: null,
 };
  //query que vai para o login caso sue back n tenha o prefixo "user" antes do jsson com as autenficações tire o use do async abaixo
-export const login = createAsyncThunk('login', async (user: { user: { email: string; password: string; } }) => {
-  const response = await fetch('http://127.0.0.1:3000/auth/login', {
+ export const login = createAsyncThunk('login', async (user:  { username: string; password: string; } ) => {
+  const response = await fetch('http://127.0.0.1:8000/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -46,8 +46,8 @@ export const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
-    setEmail: (state, action: PayloadAction<string>) => {
-      state.email = action.payload;
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
     },
     setPassword: (state, action: PayloadAction<string>) => {
       state.password = action.payload;
@@ -69,6 +69,6 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { setEmail, setPassword } = loginSlice.actions;
+export const { setUsername, setPassword } = loginSlice.actions;
 
 export default loginSlice.reducer;

@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { setEmail, setPassword } from '../../lib/features/todos/loginslicer';
+import { setUsername, setPassword } from '../../lib/features/todos/loginslicer';
 import { RootState, AppDispatch } from '../../lib/store';
 import { login } from '../../lib/features/todos/loginslicer';
 
@@ -14,7 +14,7 @@ type LoginSignFormProps = {
 const LoginSignForm: React.FC<LoginSignFormProps> = ({ foo }) => {
     //setar e declarar valors do form
     const dispatch: AppDispatch = useDispatch();
-    const email = useSelector((state: RootState) => state.login.email);
+    const username = useSelector((state: RootState) => state.login.username);
     const password = useSelector((state: RootState) => state.login.password);
     const isAuthenticated = useSelector((state: RootState) => state.login.isAuthenticated);
     const router = useRouter();
@@ -28,8 +28,8 @@ const LoginSignForm: React.FC<LoginSignFormProps> = ({ foo }) => {
       }, [isAuthenticated]);
 
       //pega valores do form
-    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setEmail(event.target.value));
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setUsername(event.target.value));
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +38,7 @@ const LoginSignForm: React.FC<LoginSignFormProps> = ({ foo }) => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(login({ user: { email, password } }));
+        dispatch(login({ username, password }));
       };
       
     return (
@@ -52,16 +52,16 @@ const LoginSignForm: React.FC<LoginSignFormProps> = ({ foo }) => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-white text-sm font-medium leading-6 text-gray-900">
-                Email address
+              <label htmlFor="username" className="block text-white text-sm font-medium leading-6 text-gray-900">
+                Username address
               </label>
               <div className="mt-2">
                 <input
-                value={email} onChange={handleEmailChange}
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                value={username} onChange={handleUsernameChange}
+                  id="username"
+                  name="username"
+                  type="username"
+                  autoComplete="username"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
